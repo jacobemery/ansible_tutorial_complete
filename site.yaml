@@ -1,0 +1,25 @@
+---
+
+- hosts: web_server
+  become: True
+  gather_facts: False
+  vars:
+    packages: ['httpd','nano']
+  roles:
+    - install_packages
+    - httpd
+  post_tasks:
+    - name: Copy index.html to web server.
+      tags: update_website
+      copy:
+        src: website/index.html
+        dest: /var/www/html/index.html
+    - name: Add picture to web server.
+      tags: update_website
+      copy: 
+        src: website/soeasy.jpg
+        dest: /var/www/html/soeasy.jpg
+    - name: Print website URL.
+      tags: print_url, update_website
+      debug:
+        msg: "Click on or copy this URL into a web-browser to see your website: http://127.0.0.1:8081"

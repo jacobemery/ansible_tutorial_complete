@@ -1,0 +1,19 @@
+---
+
+- hosts: web_server
+  become: true
+  gather_facts: no
+  vars:
+    packages: ['apache2']
+  roles:
+    - install_packages
+    - start_apache2
+  post_tasks:
+    - name: Copy index.html to web server.
+      ansible.builtin.copy:
+        src: website/index.html
+        dest: /var/www/html/index.html
+    - name: Print website URL.
+      tags: print_url, update_website
+      debug:
+        msg: "Click on or copy this URL into a web-browser to see your website: http://127.0.0.1:80"
